@@ -1,89 +1,73 @@
-var matrix = [
-    [1, 0, 1, 0, 2],
-    [1, 0, 0, 2, 0],
-    [0, 1, 2, 0, 0],
-    [3, 0, 1, 0, 0],
-    [1, 0, 3, 0, 0],
-    [1, 1, 0, 0, 2],
-    [1, 1, 0, 0, 0]
- ];
- 
- var side = 120;
- var grassArr = [];
- var grasseaterArr = [];
- var predatorArr = [];
+var side = 20;
+var socket = io();
+var m = 20;
+var n = 20;
+var weather = "Summer";
  
  
  function setup() {
     frameRate(5);
-    createCanvas(matrix[0].length * side, matrix.length * side);
-    background('#acacac');
-
-    for(var y = 0; y < matrix.length; ++y){
-        for(var x = 0; x < matrix[y].length; ++x){
-            if(matrix[y][x] == 1){
-                var gr = new Grass(x,y,1);
-                grassArr.push(gr);
-            }
-            else if(matrix[y][x] == 2){
-                var et = new GrassEater(x,y,2)
-                grasseaterArr.push(et);
-     
-            }
-            else if(matrix[y][x] == 3){
-                var pr = new Predator(x,y,3)
-                predatorArr.push(pr);
-     
-            }
-        }
-     }  
+    createCanvas(m * side , n * side);
+    background('#acacac');  
  }
  
 
-function draw() {
-
+function drawWeather(w) {
+ var p = document.getElementById('seasons');
+ weather = w;
+ console.log(weather);
+ if (weather == "Summer") {
+        p.innerText = "Summer";
+    } else if (weather == "Winter") {
+        p.innerText = "Winter";
+    } else if (weather == "Autumn") {
+        p.innerText = "Autumn";
+    } else if (weather == "Spring") {
+        p.innerText = "Spring";
+    }
+    
+ }
+ function drawMatrix(matrix) {
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
- 
+
             if (matrix[y][x] == 0) {
-                fill("gray");           
+                fill("#33FFFF");
+                rect(x * side, y * side, side, side);
             }
+
             else if (matrix[y][x] == 1) {
-                fill("green");
+                if (weather == "Summer") {
+                    fill("green");
+                } else if (weather != "Summer") {
+                    fill("#A79F15");
+                }
+                rect(x * side, y * side, side, side);
             }
+
             else if (matrix[y][x] == 2) {
-                fill("yellow");
+                if (weather == "Winter") {
+                    fill("#696968");
+                } else if (weather != "Winter") {
+                    fill("Yellow");
+                }
+                rect(x * side, y * side, side, side);
             }
             else if (matrix[y][x] == 3) {
-                fill("red");
+                fill("black");
+                rect(x * side, y * side, side, side);
             }
-
-            rect(x * side, y * side, side, side);
         }
     }
-
-    for(var i in grassArr){
-        grassArr[i].mul();
-    }
-
-    for (var i in grasseaterArr) {
-        grasseaterArr[i].move();
-        grasseaterArr[i].eat();
-        grasseaterArr[i].mul();
-        grasseaterArr[i].die();
-    }
-    for (var i in predatorArr) {
-        predatorArr[i].move();
-        predatorArr[i].eat();
-        predatorArr[i].mul();
-        predatorArr[i].die();
-    }
- 
-   
- }
+}
 
 
- 
+socket.on("matrix", drawMatrix);
+socket.on("exanak", drawWeather);
+socket.on("exanak", function (w) {
+    weather = w;
+   // console.log(weather);
+});
  
  
 
