@@ -4,6 +4,10 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require('fs');
 
+var Grass = require("./grass.js");
+var GrassEater = require("./grassEater.js");
+var Predator = require("./predator.js");
+
 
 
 app.use(express.static("."));
@@ -11,16 +15,12 @@ app.get('/', function (req, res) {
     res.redirect('index.html');
 });
 server.listen(3000);
-io.on('connection', function (socket) {
 
-});
 
-var Grass = require("./Grass.js");
-var GrassEater = require("./GrassEater.js");
-var Predator = require("./Predator.js");
 
-var w = 50;
-var h = 60;
+
+    var w = 50;
+    var h = 60;
 function genMatrix(w, h) {
     var matrix = [];
     for (var y = 0; y < h; y++) {
@@ -47,8 +47,12 @@ predatorArr = [];
 Weather = "Summer";
 Weatherinit = 1;
 Grassinit = 0;
-GrassEater = 0;
-Predator = 0;
+GrassEaterinit = 0;
+Predatorinit = 0;
+
+Random = function (arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
 
 matrix = genMatrix(w, h);
 
@@ -61,11 +65,11 @@ for (var y = 0; y < matrix.length; y++) {
         }
         else if (matrix[y][x] == 2) {
             grasseaterArr.push(new GrassEater(x, y, 2));
-            GrassEater++;
+            GrassEaterinit++;
         }
         else if (matrix[y][x] == 3) {
             predatorArr.push(new Predator(x, y, 3));
-            Predator++;
+            Predatorinit++;
         }
     }
 }
@@ -76,30 +80,19 @@ function drawserever() {
     for (var i in grassArr) {
         grassArr[i].mul();
     }
-    for (var i in starkArr) {
-        starkArr[i].move();
-        starkArr[i].mul();
-        starkArr[i].eat();
-        starkArr[i].die();
+    for (var i in grasseaterArr) {
+        grasseaterArr[i].move();
+        grasseaterArr[i].mul();
+        grasseaterArr[i].eat();
+        grasseaterArr[i].die();
     }
-    for (var i in tywin_LannisterArr) {
-        tywin_LannisterArr[i].move();
-        tywin_LannisterArr[i].mul();
-        tywin_LannisterArr[i].eat();
-        tywin_LannisterArr[i].die();
+    for (var i in predatorArr) {
+        predatorArr[i].move();
+        predatorArr[i].mul();
+        predatorArr[i].eat();
+        predatorArr[i].die();
     }
-    for (var i in jon_SnowArr) {
-        jon_SnowArr[i].move();
-        jon_SnowArr[i].mul();
-        jon_SnowArr[i].eat();
-        jon_SnowArr[i].die();
-    }
-    for (var i in daenerys_TargaryenArr) {
-        daenerys_TargaryenArr[i].move();
-        daenerys_TargaryenArr[i].mul();
-        daenerys_TargaryenArr[i].eat();
-        daenerys_TargaryenArr[i].die();
-    }
+
     io.sockets.emit("matrix", matrix);
 }
 
@@ -123,5 +116,111 @@ function draw_wheater() {
     io.sockets.emit("exanak", Weather);
 }
 
+io.on('connection', function (socket) {
+
+   socket.on("Sxmvec", function (arr) {
+        var x = arr[0];
+        var y = arr[1];
+        
+
+        var directions = [
+            [x - 1, y - 1],
+            [x, y - 1],
+            [x + 1, y - 1],
+            [x - 1, y],
+            [x + 1, y],
+            [x - 1, y + 1],
+            [x, y + 1],
+            [x + 1, y + 1],
+        ];
+
+        if (matrix[y][x] == 1) {
+            for (var i in grassArr) {
+                if (y == grassArr[i].y && x == grassArr[i].x) {
+                    grassArr.splice(i, 1);
+                    break;
+                }
+
+            }
+        }
+        else if (matrix[y][x] == 2) {
+            for (var i in grasseaterArr) {
+                if (y == grasseaterArr[i].y && x == grasseaterArr[i].x) {
+                    grasseaterArr.splice(i, 1);
+                    break;
+                }
+
+            }
+        }
+        else if (matrix[y][x] == 3) {
+            for (var i in predatorArr) {
+                if (y == predatorArr[i].y && x == predatorArr[i].x) {
+                    predatorArr.splice(i, 1);
+                    break;
+                }
+
+            }
+        }
+       
+        
+        matrix[y][x] = 0
+
+        for (var i in directions) {
+            var harevanx = directions[i][0];
+            var harevany = directions[i][1];
+
+            if (matrix[harevany][harevanx] == 1) {
+                for (var i in grassArr) {
+                    if (harevany == grassArr[i].y && harevanx == grassArr[i].x) {
+                        grassArr.splice(i, 1);
+                        break;
+                    }
+
+                }
+            }
+            else if (matrix[harevany][harevanx] == 2) {
+                for (var i in grasseaterArr) {
+                    if (harevany == grasseaterArr[i].y && harevanx == grasseaterArr[i].x) {
+                        grasseaterArr.splice(i, 1);
+                        break;
+                    }
+
+                }
+            }
+            else if (matrix[harevany][harevanx] == 3) {
+                for (var i in predatorArr) {
+                    if (harevany == predatorArr[i].y && harevanx == predatorArr[i].x) {
+                        predatorArr.splice(i, 1);
+                        break;
+                    }
+
+                }
+            }
+           
+            matrix[harevany][harevanx] = 0
+        }
+    })
+
+});
+
+var obj = { "info": [] };
+
+function main() {
+    var file = "Statistics.json"
+    obj.info.push(
+        { "Cnvac xoter qanaky": Grassinit, "Cnvac Xotakerneri qanaky": GrassEaterinit, "Gishatichneri qanaky": Predatorinit});
+    fs.writeFileSync(file, JSON.stringify(obj,null,3));
+
+
+}
+
+
+setInterval(main, 3000)
 setInterval(drawserever, 3000);
 setInterval(draw_wheater, 3000);
+
+
+
+
+
+

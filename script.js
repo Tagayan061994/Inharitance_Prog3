@@ -1,14 +1,12 @@
 var side = 20;
 var socket = io();
-var m = 20;
-var n = 20;
 var weather = "Summer";
  
  
  function setup() {
     frameRate(5);
-    createCanvas(m * side , n * side);
-    background('#acacac');  
+    createCanvas(50 * side , 60 * side);
+    background('blue');  
  }
  
 
@@ -27,7 +25,10 @@ function drawWeather(w) {
     }
     
  }
+
  function drawMatrix(matrix) {
+    background('blue'); 
+
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
 
@@ -68,6 +69,16 @@ socket.on("exanak", function (w) {
     weather = w;
    // console.log(weather);
 });
- 
+
+
+ function mousePressed() {
+
+    var x = Math.floor(mouseX / side);
+    var y = Math.floor(mouseY / side);
+    var arr = [x, y];
+
+    socket.emit("Sxmvec", arr)
+
+}
  
 
