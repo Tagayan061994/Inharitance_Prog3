@@ -1,19 +1,26 @@
+//knchum enq socket.io ev haytarum en side canvasi hamar
 var side = 20;
 var socket = io();
-var weather = "Summer";
- 
- 
+//haytarum enq popoxakan exanaki hamar vory kereva menak script.js-um
+var weatherclient = "Summer";
+//serveri exanaky beruma talisa cleintin
+socket.on("exanak", function (w) {
+    weatherclient = w;
+   // console.log(weather);
+});
+ //setup
  function setup() {
     frameRate(5);
-    createCanvas(50 * side , 60 * side);
+    createCanvas(20 * side , 20 * side);
     background('blue');  
  }
  
-
+//haytararum enq function vory kashxati exanaky stanalu depqum,w parametrov kga serveri exanaky
 function drawWeather(w) {
  var p = document.getElementById('seasons');
- weather = w;
+ var weather = w;
  console.log(weather);
+
  if (weather == "Summer") {
         p.innerText = "Summer";
     } else if (weather == "Winter") {
@@ -26,8 +33,9 @@ function drawWeather(w) {
     
  }
 
+ //draw functiony uxaki serveric ekac matrixi hashvin 
  function drawMatrix(matrix) {
-    background('blue'); 
+    background('#33FFFF'); 
 
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
@@ -38,18 +46,18 @@ function drawWeather(w) {
             }
 
             else if (matrix[y][x] == 1) {
-                if (weather == "Summer") {
+                if (weatherclient == "Summer") {
                     fill("green");
-                } else if (weather != "Summer") {
+                } else if (weatherclient != "Summer") {
                     fill("#A79F15");
                 }
                 rect(x * side, y * side, side, side);
             }
 
             else if (matrix[y][x] == 2) {
-                if (weather == "Winter") {
+                if (weatherclient == "Winter") {
                     fill("#696968");
-                } else if (weather != "Winter") {
+                } else if (weatherclient != "Winter") {
                     fill("Yellow");
                 }
                 rect(x * side, y * side, side, side);
@@ -62,23 +70,37 @@ function drawWeather(w) {
     }
 }
 
-
+//yndunuma serveric matrixy ev kanchuma drawMatrix
 socket.on("matrix", drawMatrix);
+//yndunuma exanaky serveric ev nkaruma exanaky
 socket.on("exanak", drawWeather);
-socket.on("exanak", function (w) {
-    weather = w;
-   // console.log(weather);
-});
 
-
+//function event
  function mousePressed() {
 
     var x = Math.floor(mouseX / side);
     var y = Math.floor(mouseY / side);
     arr = [x, y];
-
+    console.log(arr);
     socket.emit("Sxmvec", arr)
 
 }
- 
-
+//function
+function keyPressed() {
+    if (keyCode == LEFT_ARROW) {
+         var left = "left"
+    } else if (keyCode == RIGHT_ARROW) {
+         var right = "right"
+    } else if (keyCode == UP_ARROW) {
+        var up = "up"
+    } else if (keyCode == DOWN_ARROW) {
+          var down = "down"
+    }
+     data = {
+        keyleft: left,
+        keyright: right,
+        keyup: up,
+        keydown : down
+    }
+    socket.emit("keyevent", data) ;
+}

@@ -14,9 +14,9 @@ server.listen(3000, function () {
 });
 
 //stex kapum en mer classery
-var Grass = require("./grass.js");
-var GrassEater = require("./grassEater.js");
-var Predator = require("./predator.js");
+var Grass = require("./module/grass.js");
+var GrassEater = require("./module/grassEater.js");
+var Predator = require("./module/predator.js");
 
 
 //haytarum en zanvacnery
@@ -45,10 +45,10 @@ function genMatrix(w, h) {
     for (var y = 0; y < h; y++) {
         matrix[y] = [];
         for (var x = 0; x < w; x++) {
-            var r = Math.floor(Math.random() * 100);
+            var r = Math.floor(Math.random() * 75);
             if (r < 20) r = 0;
             else if (r < 40) r = 1;
-            else if (r < 60) r = 2;
+            else if (r < 42) r = 2;
             else if (r < 75) r = 3;
             // else if (r < 85) r = 4;
             // else if (r < 100) r = 5;
@@ -97,12 +97,12 @@ function drawserever() {
         grasseaterArr[i].move();
         grasseaterArr[i].mul();
         grasseaterArr[i].eat();
-        grasseaterArr[i].die();
+        //grasseaterArr[i].die();
     }
     for (var i in predatorArr) {
         predatorArr[i].move();
         predatorArr[i].mul();
-        predatorArr[i].eat();
+       // predatorArr[i].eat();
         predatorArr[i].die();
     }
 //matrixy uxarkum en clientin
@@ -134,7 +134,8 @@ function draw_wheater() {
 }
 //connectiona stexcum scriptic ekac infoi himan vra script.js i het
 io.on('connection', function (socket) {
-
+setInterval(drawserever, 1000);
+setInterval(draw_wheater, 3000);
     socket.on("Sxmvec", function (arr) {
         var x = arr[0];
         var y = arr[1];
@@ -180,7 +181,7 @@ io.on('connection', function (socket) {
         }
 
 
-        matrix[y][x] = 0
+        matrix[y][x] = 0;
 
         for (var i in directions) {
             var harevanx = directions[i][0];
@@ -214,10 +215,23 @@ io.on('connection', function (socket) {
                 }
             }
 
-            matrix[harevany][harevanx] = 0
+            matrix[harevany][harevanx] = 0;
         }
-    });
+    })
+    socket.on("keyevent", function(evt){
+        var key = evt;
+        if (key.keyleft == "left") {
+            GrassEater.left()   
+        } else if (key.keyright == "right") {
+            GrassEater.right()
+        } else if (key.keyup == "up") {
+            GrassEater.up()
+        } else if (key.keydown == "down") {
+            GrassEater.down()
+        }
 
+        console.log(key);
+    });
 });
 
 
@@ -229,14 +243,11 @@ function main() {
     obj.info.push(
         { "Cnvac xoter qanaky": Grassinit, "Cnvac Xotakerneri qanaky": GrassEaterinit, "Gishatichneri qanaky": Predatorinit });
     fs.writeFileSync(file, JSON.stringify(obj, null, 3));
-
-
 }
 
 
-setInterval(main, 3000)
-setInterval(drawserever, 3000);
-setInterval(draw_wheater, 3000);
+//setInterval(main, 3000)
+
 
 
 

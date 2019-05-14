@@ -2,7 +2,7 @@ var LivingCreature = require("./LivingCreature.js");
 
 module.exports = class GrassEater extends LivingCreature {
     constructor(x, y, index) {
-        super (x,y,index);
+        super(x, y, index);
         this.energy = 8;
     }
     getNewCoordinates() {
@@ -20,10 +20,10 @@ module.exports = class GrassEater extends LivingCreature {
 
     chooseCell(character) {
         this.getNewCoordinates();
-      return  super.chooseCell(character);
+        return super.chooseCell(character);
     }
     move() {
-    
+
         var fullCells = this.chooseCell(0);
         var newCell = Random(fullCells);
 
@@ -44,7 +44,7 @@ module.exports = class GrassEater extends LivingCreature {
             var newX = grass[0];
             var newY = grass[1];
             matrix[newY][newX] = this.index;
-    
+
             matrix[this.y][this.x] = 0;
             for (var i in grassArr) {
                 if (newX == grassArr[i].x && newY == grassArr[i].y) {
@@ -58,7 +58,7 @@ module.exports = class GrassEater extends LivingCreature {
         }
     }
     mul() {
-       // this.multiply++;
+        // this.multiply++;
         //the same as >
         //var emptyCells = this.chooseCell(0);
         // var newcell = random(emtyCells); 
@@ -79,9 +79,38 @@ module.exports = class GrassEater extends LivingCreature {
             matrix[this.y][this.x] = 0;
             for (var i in grasseaterArr) {
                 if (this.x == grasseaterArr[i].x && this.y == grasseaterArr[i].y) {
-                   grasseaterArr.splice(i, 1);
+                    grasseaterArr.splice(i, 1);
                 }
             }
+        }
+    }
+    left() {
+        if (matrix[this.y][this.x - 1] == 0) {
+            matrix[this.y][this.x] = 0
+            this.x--;
+            matrix[this.y][this.x] = 2
+        }
+
+    }
+    right() {
+        if (matrix[this.y][this.x + 1] == 0) {
+            matrix[this.y][this.x] = 0
+            this.x++;
+            matrix[this.y][this.x] = 2
+        }
+    }
+    up() {
+        if (matrix[this.y - 1][this.x] == 0) {
+            matrix[this.y][this.x] = 0
+            this.y--;
+            matrix[this.y][this.x] = 2
+        }
+    }
+    down() {
+        if (matrix[this.y + 1][this.x] == 0) {
+            matrix[this.y][this.x] = 0
+            this.y++;
+            matrix[this.y][this.x] = 2
         }
     }
 }
