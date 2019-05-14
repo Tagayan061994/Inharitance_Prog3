@@ -75,7 +75,7 @@ socket.on("exanak", function (w) {
 
     var x = Math.floor(mouseX / side);
     var y = Math.floor(mouseY / side);
-    var arr = [x, y];
+    arr = [x, y];
 
     socket.emit("Sxmvec", arr)
 

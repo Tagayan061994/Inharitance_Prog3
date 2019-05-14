@@ -4,23 +4,42 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fs = require('fs');
 
+app.use(express.static("."));
+app.get('/', function (req, res) {
+    res.redirect('index.html');
+});
+server.listen(3000, function () {
+    console.log("port is runninng")
+
+});
+
+//stex kapum en mer classery
 var Grass = require("./grass.js");
 var GrassEater = require("./grassEater.js");
 var Predator = require("./predator.js");
 
 
-
-app.use(express.static("."));
-app.get('/', function (req, res) {
-    res.redirect('index.html');
-});
-server.listen(3000);
+//haytarum en zanvacnery
+grassArr = [];
+grasseaterArr = [];
+predatorArr = [];
 
 
+//haytararum en popoxakan exanaki masin
+Weather = "Summer";
+//haytararum enq popoxaknner voronq hashvelu en qanaky kerparneri
+Weatherinit = 1;
+Grassinit = 0;
+GrassEaterinit = 0;
+Predatorinit = 0;
 
 
-    var w = 50;
-    var h = 60;
+
+
+//stexcum en matrix generacnox function
+var w = 50;
+var h = 60;
+
 function genMatrix(w, h) {
     var matrix = [];
     for (var y = 0; y < h; y++) {
@@ -31,31 +50,25 @@ function genMatrix(w, h) {
             else if (r < 40) r = 1;
             else if (r < 60) r = 2;
             else if (r < 75) r = 3;
-           // else if (r < 85) r = 4;
-           // else if (r < 100) r = 5;
+            // else if (r < 85) r = 4;
+            // else if (r < 100) r = 5;
             matrix[y][x] = r;
         }
     }
     return matrix;
 }
 
-grassArr = [];
-grasseaterArr = [];
-predatorArr = [];
 
-
-Weather = "Summer";
-Weatherinit = 1;
-Grassinit = 0;
-GrassEaterinit = 0;
-Predatorinit = 0;
-
+//stexcum en zangvacic patahakan andam tvoc function
 Random = function (arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+//kanchum en genMatrix functiony ev talis en matrix popoxakanin
 matrix = genMatrix(w, h);
 
+
+//stex pptvum en matrix-i mejov u stexcum en objectnery
 for (var y = 0; y < matrix.length; y++) {
     for (var x = 0; x < matrix[y].length; x++) {
 
@@ -74,7 +87,7 @@ for (var y = 0; y < matrix.length; y++) {
     }
 }
 
-
+//stexcum en function vor kkanchi objecteri methodnery ev kuxark matrixi masin datan script.js
 function drawserever() {
 
     for (var i in grassArr) {
@@ -92,11 +105,14 @@ function drawserever() {
         predatorArr[i].eat();
         predatorArr[i].die();
     }
-
+//matrixy uxarkum en clientin
     io.sockets.emit("matrix", matrix);
 }
 
+
+//stexcum enq function vory exanak e poxancelu script.js
 function draw_wheater() {
+
     Weatherinit++;
     if (Weatherinit == 5) {
         Weatherinit = 1;
@@ -113,15 +129,16 @@ function draw_wheater() {
     if (Weatherinit == 1) {
         Weather = "Summer";
     }
+//uxarkuma exanak clientin    
     io.sockets.emit("exanak", Weather);
 }
-
+//connectiona stexcum scriptic ekac infoi himan vra script.js i het
 io.on('connection', function (socket) {
 
-   socket.on("Sxmvec", function (arr) {
+    socket.on("Sxmvec", function (arr) {
         var x = arr[0];
         var y = arr[1];
-        
+
 
         var directions = [
             [x - 1, y - 1],
@@ -161,8 +178,8 @@ io.on('connection', function (socket) {
 
             }
         }
-       
-        
+
+
         matrix[y][x] = 0
 
         for (var i in directions) {
@@ -196,20 +213,22 @@ io.on('connection', function (socket) {
 
                 }
             }
-           
+
             matrix[harevany][harevanx] = 0
         }
-    })
+    });
 
 });
 
+
+///statistca hanox function 
 var obj = { "info": [] };
 
 function main() {
     var file = "Statistics.json"
     obj.info.push(
-        { "Cnvac xoter qanaky": Grassinit, "Cnvac Xotakerneri qanaky": GrassEaterinit, "Gishatichneri qanaky": Predatorinit});
-    fs.writeFileSync(file, JSON.stringify(obj,null,3));
+        { "Cnvac xoter qanaky": Grassinit, "Cnvac Xotakerneri qanaky": GrassEaterinit, "Gishatichneri qanaky": Predatorinit });
+    fs.writeFileSync(file, JSON.stringify(obj, null, 3));
 
 
 }
