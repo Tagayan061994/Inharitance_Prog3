@@ -102,13 +102,13 @@ function drawserever() {
     for (var i in predatorArr) {
         predatorArr[i].move();
         predatorArr[i].mul();
-       // predatorArr[i].eat();
+        // predatorArr[i].eat();
         predatorArr[i].die();
     }
-//matrixy uxarkum en clientin
+    //matrixy uxarkum en clientin
     io.sockets.emit("matrix", matrix);
 }
-
+// setInterval(drawserever, 3000);
 
 //stexcum enq function vory exanak e poxancelu script.js
 function draw_wheater() {
@@ -129,16 +129,21 @@ function draw_wheater() {
     if (Weatherinit == 1) {
         Weather = "Summer";
     }
-//uxarkuma exanak clientin    
+    //uxarkuma exanak clientin    
     io.sockets.emit("exanak", Weather);
 }
+
+
+
+// setInterval(draw_wheater, 3000);
+
+
 //connectiona stexcum scriptic ekac infoi himan vra script.js i het
 io.on('connection', function (socket) {
-setInterval(drawserever, 1000);
-setInterval(draw_wheater, 3000);
     socket.on("Sxmvec", function (arr) {
         var x = arr[0];
         var y = arr[1];
+
 
 
         var directions = [
@@ -149,8 +154,9 @@ setInterval(draw_wheater, 3000);
             [x + 1, y],
             [x - 1, y + 1],
             [x, y + 1],
-            [x + 1, y + 1],
+            [x + 1, y + 1]
         ];
+
 
         if (matrix[y][x] == 1) {
             for (var i in grassArr) {
@@ -180,58 +186,61 @@ setInterval(draw_wheater, 3000);
             }
         }
 
-
         matrix[y][x] = 0;
+
 
         for (var i in directions) {
             var harevanx = directions[i][0];
             var harevany = directions[i][1];
+            if (harevanx >= 0 && harevanx < matrix[0].length && harevany >= 0 && harevany < matrix.length) {
+                if (matrix[harevany][harevanx] == 1) {
+                    for (var i in grassArr) {
+                        if (harevany == grassArr[i].y && harevanx == grassArr[i].x) {
+                            grassArr.splice(i, 1);
+                            break;
+                        }
 
-            if (matrix[harevany][harevanx] == 1) {
-                for (var i in grassArr) {
-                    if (harevany == grassArr[i].y && harevanx == grassArr[i].x) {
-                        grassArr.splice(i, 1);
-                        break;
                     }
-
                 }
-            }
-            else if (matrix[harevany][harevanx] == 2) {
-                for (var i in grasseaterArr) {
-                    if (harevany == grasseaterArr[i].y && harevanx == grasseaterArr[i].x) {
-                        grasseaterArr.splice(i, 1);
-                        break;
+
+                else if (matrix[harevany][harevanx] == 2) {
+                    for (var i in grasseaterArr) {
+                        if (harevany == grasseaterArr[i].y && harevanx == grasseaterArr[i].x) {
+                            grasseaterArr.splice(i, 1);
+                            break;
+                        }
+
                     }
-
                 }
-            }
-            else if (matrix[harevany][harevanx] == 3) {
-                for (var i in predatorArr) {
-                    if (harevany == predatorArr[i].y && harevanx == predatorArr[i].x) {
-                        predatorArr.splice(i, 1);
-                        break;
+                else if (matrix[harevany][harevanx] == 3) {
+                    for (var i in predatorArr) {
+                        if (harevany == predatorArr[i].y && harevanx == predatorArr[i].x) {
+                            predatorArr.splice(i, 1);
+                            break;
+                        }
+
                     }
-
                 }
+
+                matrix[harevany][harevanx] = 0;
             }
 
-            matrix[harevany][harevanx] = 0;
         }
-    })
-    socket.on("keyevent", function(evt){
-        var key = evt;
-        if (key.keyleft == "left") {
-            GrassEater.left()   
-        } else if (key.keyright == "right") {
-            GrassEater.right()
-        } else if (key.keyup == "up") {
-            GrassEater.up()
-        } else if (key.keydown == "down") {
-            GrassEater.down()
-        }
-
-        console.log(key);
     });
+    // socket.on("keyevent", function(evt){
+    //     var key = evt;
+    //     if (key.keyleft == "left") {
+    //         GrassEater.left()   
+    //     } else if (key.keyright == "right") {
+    //         GrassEater.right()
+    //     } else if (key.keyup == "up") {
+    //         GrassEater.up()
+    //     } else if (key.keydown == "down") {
+    //         GrassEater.down()
+    //     }
+
+    //     console.log(key);
+    // });
 });
 
 
@@ -245,7 +254,8 @@ function main() {
     fs.writeFileSync(file, JSON.stringify(obj, null, 3));
 }
 
-
+setInterval(drawserever, 2000);
+ //setInterval(draw_wheater, 6000);
 //setInterval(main, 3000)
 
 

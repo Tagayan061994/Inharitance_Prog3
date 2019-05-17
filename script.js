@@ -10,7 +10,6 @@ socket.on("exanak", function (w) {
 });
  //setup
  function setup() {
-    frameRate(5);
     createCanvas(20 * side , 20 * side);
     background('blue');  
  }
