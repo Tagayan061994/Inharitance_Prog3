@@ -1,8 +1,12 @@
 //knchum enq socket.io ev haytarum en side canvasi hamar
 var side = 20;
 var socket = io();
+
+//var button = document.getElementById('fire');
+
+
 //haytarum enq popoxakan exanaki hamar vory kereva menak script.js-um
-var weatherclient = "Summer";
+var weatherclient = "Summer";   
 //serveri exanaky beruma talisa cleintin
 socket.on("exanak", function (w) {
     weatherclient = w;
@@ -65,6 +69,10 @@ function drawWeather(w) {
                 fill("black");
                 rect(x * side, y * side, side, side);
             }
+            else if (matrix[y][x] == 6) {
+                fill("red");
+                rect(x * side, y * side, side, side);
+            }
         }
     }
 }
@@ -84,22 +92,27 @@ socket.on("exanak", drawWeather);
     socket.emit("Sxmvec", arr)
 
 }
-//function
-function keyPressed() {
-    if (keyCode == LEFT_ARROW) {
-         var left = "left"
-    } else if (keyCode == RIGHT_ARROW) {
-         var right = "right"
-    } else if (keyCode == UP_ARROW) {
-        var up = "up"
-    } else if (keyCode == DOWN_ARROW) {
-          var down = "down"
-    }
-     data = {
-        keyleft: left,
-        keyright: right,
-        keyup: up,
-        keydown : down
-    }
-    socket.emit("keyevent", data) ;
+
+
+function FireButton() {
+    socket.emit("armagedon");
 }
+// //function
+// function keyPressed() {
+//     if (keyCode == LEFT_ARROW) {
+//          var left = "left"
+//     } else if (keyCode == RIGHT_ARROW) {
+//          var right = "right"
+//     } else if (keyCode == UP_ARROW) {
+//         var up = "up"
+//     } else if (keyCode == DOWN_ARROW) {
+//           var down = "down"
+//     }
+//      data = {
+//         keyleft: left,
+//         keyright: right, 
+//         keyup: up,
+//         keydown : down
+//     }
+//     socket.emit("keyevent", data) ;
+// }

@@ -97,12 +97,12 @@ function drawserever() {
         grasseaterArr[i].move();
         grasseaterArr[i].mul();
         grasseaterArr[i].eat();
-        //grasseaterArr[i].die();
+        grasseaterArr[i].die();
     }
     for (var i in predatorArr) {
         predatorArr[i].move();
         predatorArr[i].mul();
-        // predatorArr[i].eat();
+        predatorArr[i].eat();
         predatorArr[i].die();
     }
     //matrixy uxarkum en clientin
@@ -226,6 +226,10 @@ io.on('connection', function (socket) {
             }
 
         }
+
+
+        io.sockets.emit("matrix", matrix);
+
     });
     // socket.on("keyevent", function(evt){
     //     var key = evt;
@@ -241,21 +245,26 @@ io.on('connection', function (socket) {
 
     //     console.log(key);
     // });
+    socket.on("armagedon", function () {
+        for (var y = 0; y < matrix.length; y++) {
+            for (var x = 0; x < matrix[y].length; x++) {
+                      matrix[y][x] = 6
+            }
+        }
+
+        grassArr.length = 0;
+        grasseaterArr.length = 0;
+        predatorArr.length = 0;
+        io.sockets.emit("matrix", matrix);
+    })
 });
 
 
 ///statistca hanox function 
-var obj = { "info": [] };
 
-function main() {
-    var file = "Statistics.json"
-    obj.info.push(
-        { "Cnvac xoter qanaky": Grassinit, "Cnvac Xotakerneri qanaky": GrassEaterinit, "Gishatichneri qanaky": Predatorinit });
-    fs.writeFileSync(file, JSON.stringify(obj, null, 3));
-}
 
 setInterval(drawserever, 2000);
- //setInterval(draw_wheater, 6000);
+setInterval(draw_wheater, 6000);
 //setInterval(main, 3000)
 
 
