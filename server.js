@@ -261,11 +261,18 @@ io.on('connection', function (socket) {
 
 
 ///statistca hanox function 
+var obj = { "info": [] };
+
+function main() {
+    var file = "Statistics.json";
+    obj.info.push({ "Cnvac xoter qanaky": Grassinit, "Cnvac Xotakerneri qanaky": GrassEaterinit, "Cnvac Gishatichneri qanaky": Predatorinit});
+    fs.writeFileSync(file, JSON.stringify(obj,null,3));
+}
 
 
 setInterval(drawserever, 2000);
 setInterval(draw_wheater, 6000);
-//setInterval(main, 3000)
+setInterval(main, 3000)
 
 
 
