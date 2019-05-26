@@ -66,19 +66,7 @@ function drawMatrix(matrix) {
                 rect(x * side, y * side, side, side);
             }
             else if (matrix[y][x] == 3) {
-                // fill("black");
-                // rect(x * side, y * side, side, side);
-                stroke("grey")
-                fill("grey")
-                rect(x * side, y * side, side, side, 30, 30, 0, 0);
-                fill("#545454")
-                stroke("#545454")
-                rect(x * side + side * (2 / 5), y * side + side * (1 / 7), side * (1 / 10), side * (5 / 7), 30, 30, 0, 0);
-                rect(x * side + side * (1 / 5), y * side + side * (2 / 7), side * (3 / 6), side * (1 / 14), 30, 30, 0, 0);
-                stroke("green")
-            }
-            else if (matrix[y][x] == 6) {
-                fill("red");
+                fill("black");
                 rect(x * side, y * side, side, side);
                 // stroke("grey")
                 // fill("grey")
@@ -88,6 +76,18 @@ function drawMatrix(matrix) {
                 // rect(x * side + side * (2 / 5), y * side + side * (1 / 7), side * (1 / 10), side * (5 / 7), 30, 30, 0, 0);
                 // rect(x * side + side * (1 / 5), y * side + side * (2 / 7), side * (3 / 6), side * (1 / 14), 30, 30, 0, 0);
                 // stroke("green")
+            }
+            else if (matrix[y][x] == 6) {
+                // fill("red");
+                // rect(x * side, y * side, side, side);
+                stroke("grey")
+                fill("grey")
+                rect(x * side, y * side, side, side, 30, 30, 0, 0);
+                fill("#545454")
+                stroke("#545454")
+                rect(x * side + side * (2 / 5), y * side + side * (1 / 7), side * (1 / 10), side * (5 / 7), 30, 30, 0, 0);
+                rect(x * side + side * (1 / 5), y * side + side * (2 / 7), side * (3 / 6), side * (1 / 14), 30, 30, 0, 0);
+                stroke("green")
             }
         }
     }
@@ -114,6 +114,8 @@ function mousePressed() {
 function FireButton() {
     socket.emit("armagedon");
 }
+
+
 // //function
 // function keyPressed() {
 //     if (keyCode == LEFT_ARROW) {

@@ -33,9 +33,6 @@ Grassinit = 0;
 GrassEaterinit = 0;
 Predatorinit = 0;
 
-
-
-
 //stexcum en matrix generacnox function
 var w = 50;
 var h = 60;
@@ -228,7 +225,7 @@ io.on('connection', function (socket) {
         }
 
 
-        io.sockets.emit("matrix", matrix);
+            io.sockets.emit("matrix", matrix);
 
     });
     // socket.on("keyevent", function(evt){
@@ -272,7 +269,7 @@ function main() {
 
 setInterval(drawserever, 2000);
 setInterval(draw_wheater, 6000);
-setInterval(main, 3000)
+setInterval(main, 3000);
 
 
 
