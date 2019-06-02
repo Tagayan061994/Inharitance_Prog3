@@ -34,7 +34,7 @@ GrassEaterinit = 0;
 Predatorinit = 0;
 
 //stexcum en matrix generacnox function
-var w = 50;
+var w = 500;
 var h = 60;
 
 function genMatrix(w, h) {
